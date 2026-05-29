@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segun-Olufemi Timothy | Security Research Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg2: #0f1318;
+    --bg3: #141a20;
+    --card: #111619;
+    --border: #1e2a32;
+    --accent: #00ff9d;
+    --accent2: #00c4ff;
+    --dim: #3a4a55;
+    --text: #cdd8df;
+    --text2: #7a99aa;
+    --danger: #ff4444;
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Barlow', sans-serif;
+    --cond: 'Barlow Condensed', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { color: var(--accent); }
+  ::selection { background: var(--accent); color: #000; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 56px;
+    background: rgba(10,12,15,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+  }
+  .nav-logo span { color: var(--text2); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text2);
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text2);
+    transition: all 0.3s ease;
+    border-radius: 1px;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--accent); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--accent); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 56px; left: 0; right: 0;
+    background: rgba(10,12,15,0.98);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    z-index: 99;
+    padding: 1rem 0;
+  }
+  .mobile-menu.open { display: block; }
+  .mobile-menu ul { list-style: none; }
+  .mobile-menu ul li a {
+    display: block;
+    padding: 0.75rem 2rem;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text2);
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+  .mobile-menu ul li a:hover {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: rgba(0,255,157,0.03);
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2.5rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 30%, rgba(0,255,157,0.04) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(0,196,255,0.03) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.025;
+    background-image:
+      linear-gradient(var(--accent) 1px, transparent 1px),
+      linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 1.25rem;
+  }
+  .hero-eyebrow::before { content: '> '; color: var(--dim); }
+  .hero-name {
+    font-family: var(--cond);
+    font-size: clamp(3.2rem, 10vw, 8rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #e8f0f5;
+    margin-bottom: 1.5rem;
+  }
+  .hero-name em {
+    font-style: normal;
+    color: var(--accent);
+    -webkit-text-stroke: 1px var(--accent);
+  }
+  .hero-role {
+    font-size: 14px;
+    color: var(--text2);
+    letter-spacing: 0.06em;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  .hero-role strong { color: var(--text); font-weight: 600; }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    padding: 0.6rem 1.4rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #00e68a; color: #000; transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--accent2);
+    border: 1px solid var(--accent2);
+  }
+  .btn-outline:hover { background: rgba(0,196,255,0.08); color: var(--accent2); }
+
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-top: 4rem;
+    max-width: 600px;
+  }
+  .stat { padding: 1.25rem 0; text-align: center; }
+  .stat:not(:last-child) { border-right: 1px solid var(--border); }
+  .stat-num {
+    font-family: var(--cond);
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text2);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+    display: block;
+  }
+
+  section { padding: 5rem 2.5rem; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .section-label::before { content: '// '; color: var(--dim); }
+  .section-title {
+    font-family: var(--cond);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    color: #e8f0f5;
+    letter-spacing: 0.01em;
+    margin-bottom: 2.5rem;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .project-card {
+    background: var(--card);
+    padding: 1.5rem;
+    position: relative;
+    transition: background 0.2s;
+    cursor: default;
+  }
+  .project-card:hover { background: var(--bg3); }
+  .project-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 0;
+    background: var(--accent);
+    transition: height 0.3s ease;
+  }
+  .project-card:hover::before { height: 100%; }
+  .card-meta { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 1px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .badge-easy { background: rgba(0,255,157,0.1); color: var(--accent); border: 1px solid rgba(0,255,157,0.2); }
+  .badge-medium { background: rgba(255,180,0,0.1); color: #ffb400; border: 1px solid rgba(255,180,0,0.2); }
+  .badge-hard { background: rgba(255,68,68,0.1); color: var(--danger); border: 1px solid rgba(255,68,68,0.2); }
+  .badge-platform { font-family: var(--mono); font-size: 10px; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; }
+  .card-title { font-family: var(--cond); font-size: 1.15rem; font-weight: 700; color: #e8f0f5; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.5rem; }
+  .card-desc { font-size: 13px; color: var(--text2); margin-bottom: 1rem; line-height: 1.5; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1rem; }
+  .tag { font-family: var(--mono); font-size: 10px; color: var(--dim); border: 1px solid var(--border); padding: 2px 7px; border-radius: 1px; transition: all 0.2s; }
+  .project-card:hover .tag { color: var(--text2); border-color: var(--dim); }
+  .card-link { font-family: var(--mono); font-size: 11px; color: var(--accent2); letter-spacing: 0.06em; display: inline-flex; align-items: center; gap: 0.35rem; }
+  .card-link:hover { color: var(--accent); }
+  .card-link::after { content: ' →'; }
+
+  .empty-state {
+    grid-column: 1 / -1;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: var(--card);
+  }
+  .empty-state p {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--dim);
+  }
+  .empty-state p span { color: var(--accent); }
+
+  .techniques-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+  .technique-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.6rem 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .technique-item:hover { border-color: var(--dim); background: var(--bg3); }
+  .technique-name { font-family: var(--mono); font-size: 12px; color: var(--text); }
+  .technique-count { font-family: var(--mono); font-size: 11px; color: var(--accent); background: rgba(0,255,157,0.08); padding: 1px 7px; border-radius: 1px; }
+
+  .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.5rem; }
+  .tool-item { text-align: center; padding: 0.75rem 0.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 2px; transition: all 0.2s; cursor: default; }
+  .tool-item:hover { border-color: var(--accent2); background: var(--bg3); }
+  .tool-name { font-family: var(--mono); font-size: 12px; color: var(--text); display: block; }
+  .tool-count { font-family: var(--mono); font-size: 10px; color: var(--text2); margin-top: 2px; display: block; }
+
+  .certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
+  .cert-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+    transition: all 0.2s;
+  }
+  .cert-card:hover { border-color: var(--accent); }
+  .cert-icon {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(0,255,157,0.08);
+    border: 1px solid rgba(0,255,157,0.2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.2;
+    padding: 4px;
+  }
+  .cert-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .cert-org { font-family: var(--mono); font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+  .contact-links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
+  .contact-link {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    letter-spacing: 0.06em;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .contact-link:hover { border-color: var(--accent); color: var(--accent); background: rgba(0,255,157,0.04); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+  .terminal-line {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--dim);
+    padding: 0.5rem 2.5rem;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .terminal-line span { color: var(--accent); }
+
+  footer {
+    padding: 2rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--dim);
+    border-top: 1px solid var(--border);
+  }
+  footer span { color: var(--text2); }
+
+  .section-alt { background: var(--bg2); }
+
+  .view-all-row { display: flex; justify-content: flex-end; margin-top: 0.5rem; }
+  .view-all {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    padding: 0.5rem 1.2rem;
+    border-radius: 2px;
+    letter-spacing: 0.06em;
+    transition: all 0.2s;
+  }
+  .view-all:hover { color: var(--accent); border-color: var(--accent); }
+
+  .status-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .filter-row { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text2);
+    border: 1px solid var(--border);
+    background: transparent;
+    padding: 4px 14px;
+    border-radius: 1px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .filter-btn.active, .filter-btn:hover { color: var(--accent); border-color: var(--accent); background: rgba(0,255,157,0.05); }
+
+  @media (max-width: 640px) {
+    nav { padding: 0 1.25rem; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero { padding: 7rem 1.25rem 3rem; }
+    section { padding: 3.5rem 1.25rem; }
+    .stats-bar { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><span>&gt; </span>timmyhacks<span>.sec</span></div>
+  <ul class="nav-links">
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#writeups">Write-ups</a></li>
+    <li><a href="#techniques">Techniques</a></li>
+    <li><a href="#tools">Tools</a></li>
+    <li><a href="#certs">Certs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <ul>
+    <li><a href="#projects" onclick="closeMenu()">Projects</a></li>
+    <li><a href="#writeups" onclick="closeMenu()">Write-ups</a></li>
+    <li><a href="#techniques" onclick="closeMenu()">Techniques</a></li>
+    <li><a href="#tools" onclick="closeMenu()">Tools</a></li>
+    <li><a href="#certs" onclick="closeMenu()">Certs</a></li>
+    <li><a href="#contact" onclick="closeMenu()">Contact</a></li>
+  </ul>
+</div>
+
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <p class="hero-eyebrow">security_research_portfolio.init()</p>
+  <h1 class="hero-name">Segun-Olufemi<br><em>Timothy</em></h1>
+  <p class="hero-role">
+    <strong>Penetration Tester</strong> &nbsp;/&nbsp; Security Analyst<br>
+    <span style="margin-top:0.4rem;display:block"><span class="status-dot"></span>Seeking internship roles · Actively practicing</span>
+  </p>
+  <p style="max-width:560px; font-size:14px; color:var(--text2); line-height:1.8; margin-bottom:2rem; font-weight:300;">
+    ISC2-certified Computer Science graduate who has hunted real vulnerabilities in live network traffic, manually exploited SQL injection in web applications, and is actively working through penetration testing labs, building a genuine understanding of the attacker's mindset from both sides of the wire.
+  </p>
+  <div class="hero-actions">
+    <a href="#" class="btn btn-primary">Download CV</a>
+    <a href="#writeups" class="btn btn-outline">View Write-ups</a>
+  </div>
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-num" id="count-writeups">0</span>
+      <span class="stat-label">Write-ups</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num" id="count-techniques">0</span>
+      <span class="stat-label">Techniques</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num" id="count-tools">0</span>
+      <span class="stat-label">Tools Used</span>
+    </div>
+  </div>
+</section>
+
+<div class="terminal-line">
+  $ nmap -sV -sC --open -T4 &nbsp;·&nbsp; gobuster dir -u &nbsp;·&nbsp; hydra -l admin -P rockyou.txt &nbsp;·&nbsp; sqlmap -u &nbsp;·&nbsp; msfconsole &nbsp;·&nbsp; linpeas.sh &nbsp;·&nbsp; <span>timmyhacks@kali:~#</span>
+</div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label">hands_on_work</p>
+  <h2 class="section-title">Projects</h2>
+  <div class="projects-grid" style="margin-bottom:0;">
+
+    <div class="project-card" style="cursor:default;">
+      <div class="card-meta">
+        <span class="badge badge-easy" style="background:rgba(0,196,255,0.1);color:var(--accent2);border-color:rgba(0,196,255,0.2);">Internship</span>
+        <span class="badge-platform">Redynox · 2026</span>
+      </div>
+      <div class="card-title">Network Security &amp; Web App Pentesting</div>
+      <div class="card-desc">
+        Analysed live home network traffic with Wireshark and uncovered a real vulnerability: the router's admin interface communicating over unencrypted HTTP, exposing credentials to interception. Configured Windows Defender Firewall rules to block Telnet and restrict unauthorized inbound connections. Performed automated scanning with OWASP ZAP on WebGoat (1,700+ requests), then manually exploited SQL Injection using a blind injection technique to authenticate as another user without knowing their password, and demonstrated stored XSS via a script payload that confirmed session-level access.
+      </div>
+      <div class="card-tags">
+        <span class="tag">wireshark</span>
+        <span class="tag">owasp-zap</span>
+        <span class="tag">webgoat</span>
+        <span class="tag">sql-injection</span>
+        <span class="tag">xss</span>
+        <span class="tag">csrf</span>
+        <span class="tag">firewall-config</span>
+        <span class="tag">network-analysis</span>
+      </div>
+      <a href="#" class="card-link" style="color:var(--accent2);">View Internship Report</a>
+    </div>
+
+    <div class="project-card" style="cursor:default;">
+      <div class="card-meta">
+        <span class="badge badge-easy" style="background:rgba(0,196,255,0.1);color:var(--accent2);border-color:rgba(0,196,255,0.2);">Final Year Project</span>
+        <span class="badge-platform">Bowen University</span>
+      </div>
+      <div class="card-title">Hybrid Phishing Email Detection System</div>
+      <div class="card-desc">
+        Built a phishing detection framework combining rule-based logic with machine learning classification, designed from an attacker-first perspective: studying real phishing URL structures, sender spoofing behaviour, and social engineering patterns before building defences against them. Evaluated using accuracy, recall, and F1-score metrics to assess real-world detection reliability.
+      </div>
+      <div class="card-tags">
+        <span class="tag">machine-learning</span>
+        <span class="tag">threat-detection</span>
+        <span class="tag">email-security</span>
+        <span class="tag">rule-based-logic</span>
+        <span class="tag">python</span>
+        <span class="tag">offensive-thinking</span>
+      </div>
+      <a href="#" class="card-link" style="color:var(--accent2);">View Research Paper</a>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- WRITE-UPS -->
+<section id="writeups">
+  <p class="section-label">practical_labs</p>
+  <h2 class="section-title">Write-ups &amp; Labs</h2>
+  <div class="filter-row">
+    <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+    <button class="filter-btn" onclick="filterCards('THM', this)">TryHackMe</button>
+    <button class="filter-btn" onclick="filterCards('HTB', this)">HackTheBox</button>
+    <button class="filter-btn" onclick="filterCards('easy', this)">Easy</button>
+    <button class="filter-btn" onclick="filterCards('medium', this)">Medium</button>
+    <button class="filter-btn" onclick="filterCards('hard', this)">Hard</button>
+  </div>
+  <div class="projects-grid" id="writeups-grid">
+    <div class="empty-state">
+      <p>// <span>write-ups coming soon</span>: labs in progress</p>
+    </div>
+    <!-- ADD WRITE-UP CARDS HERE ↓
+    <div class="project-card" data-platform="THM" data-difficulty="easy">
+      <div class="card-meta">
+        <span class="badge badge-easy">Easy</span>
+        <span class="badge-platform">THM</span>
+      </div>
+      <div class="card-title">Room Name</div>
+      <div class="card-desc">Brief description of what you exploited.</div>
+      <div class="card-tags">
+        <span class="tag">nmap</span>
+        <span class="tag">privilege-escalation</span>
+      </div>
+      <a href="#" class="card-link">View Write-up</a>
+    </div>
+    -->
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TECHNIQUES -->
+<section class="section-alt" id="techniques">
+  <p class="section-label">attack_techniques</p>
+  <h2 class="section-title">Techniques Practiced</h2>
+  <div class="techniques-layout" id="techniques-list">
+    <div class="technique-item"><span class="technique-name">network-analysis</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">web-app-pentesting</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">sql-injection</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">stored-xss</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">csrf</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">firewall-configuration</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">threat-detection</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">port-scanning</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">web-enumeration</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">exploitation</span><span class="technique-count">1</span></div>
+    <!-- ADD MORE TECHNIQUES HERE ↓ -->
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- TOOLS -->
+<section id="tools">
+  <p class="section-label">toolbox</p>
+  <h2 class="section-title">Tools Practiced</h2>
+  <div class="tools-grid" id="tools-list">
+    <div class="tool-item"><span class="tool-name">wireshark</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">owasp zap</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">webgoat</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">win. firewall</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">python</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">nmap</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">gobuster</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">metasploit</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">netcat</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">ffuf</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">ssh</span><span class="tool-count">1 use</span></div>
+    <!-- ADD MORE TOOLS HERE ↓ -->
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CERTS -->
+<section class="section-alt" id="certs">
+  <p class="section-label">credentials</p>
+  <h2 class="section-title">Certifications</h2>
+  <div class="certs-grid">
+    <div class="cert-card">
+      <div class="cert-icon">ISC2<br>CC</div>
+      <div>
+        <div class="cert-name">Certified in Cybersecurity (CC)</div>
+        <div class="cert-org">ISC2</div>
+      </div>
+    </div>
+    <div class="cert-card">
+      <div class="cert-icon">ISO<br>27001</div>
+      <div>
+        <div class="cert-name">ISO/IEC 27001:2022 ISMS Foundation</div>
+        <div class="cert-org">Standards &amp; Best Practice (SandBP) · Nov 2023</div>
+      </div>
+    </div>
+    <!-- ADD MORE CERTS HERE ↓ -->
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-label">connect</p>
+  <h2 class="section-title">Get In Touch</h2>
+  <p style="color: var(--text2); max-width: 500px; font-size: 14px;">
+    Seeking penetration testing and security analyst internship opportunities.
+    Open to collaboration, mentorship, and learning. Reach out on any platform below.
+  </p>
+  <div class="contact-links">
+    <a href="https://www.linkedin.com/in/timothy-segun-olufemi-834b3b246" class="contact-link" target="_blank">&#x1F517; LinkedIn</a>
+    <a href="https://tryhackme.com/p/timmyhacks" class="contact-link" target="_blank">&#x1F4BB; TryHackMe</a>
+    <a href="https://github.com/MrTimothy-hacks" class="contact-link" target="_blank">&#x1F431; GitHub</a>
+    <a href="mailto:timmyhacks@proton.me" class="contact-link">&#x2709; Email</a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Segun-Olufemi Timothy</span>
+  <span>Security Research Portfolio</span>
+</footer>
+
+<script>
+  function updateStats() {
+    const writeups = document.querySelectorAll('#writeups-grid .project-card').length;
+    const techniques = document.querySelectorAll('#techniques-list .technique-item').length;
+    const tools = document.querySelectorAll('#tools-list .tool-item').length;
+
+    function animCount(el, target) {
+      let n = 0;
+      const step = Math.max(1, Math.floor(target / 30));
+      const t = setInterval(() => {
+        n = Math.min(n + step, target);
+        el.textContent = n;
+        if (n >= target) clearInterval(t);
+      }, 40);
+    }
+
+    animCount(document.getElementById('count-writeups'), writeups);
+    animCount(document.getElementById('count-techniques'), techniques);
+    animCount(document.getElementById('count-tools'), tools);
+  }
+
+  function filterCards(filter, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#writeups-grid .project-card').forEach(card => {
+      if (filter === 'all') {
+        card.style.display = '';
+      } else if (['easy','medium','hard'].includes(filter)) {
+        card.style.display = card.dataset.difficulty === filter ? '' : 'none';
+      } else {
+        card.style.display = card.dataset.platform === filter ? '' : 'none';
+      }
+    });
+  }
+
+  const cards = document.querySelectorAll('.project-card, .cert-card, .technique-item, .tool-item');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }, i * 30);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  cards.forEach(c => {
+    c.style.opacity = '0';
+    c.style.transform = 'translateY(12px)';
+    c.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    obs.observe(c);
+  });
+
+  window.addEventListener('load', updateStats);
+
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+
+  function closeMenu() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+</script>
+</body>
+</html>
