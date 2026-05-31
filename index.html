@@ -594,6 +594,38 @@
       </div>
       <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="card-link" target="_blank">View Full Report</a>
     </div>
+    <div class="project-card" data-platform="THM" data-difficulty="medium">
+      <div class="card-meta">
+        <span class="badge badge-medium">Medium</span>
+        <span class="badge-platform">THM · Jr Pentester Path</span>
+      </div>
+      <div class="card-title">Guided Pentest: Web</div>
+      <div class="card-desc">
+        A full web application penetration test from initial reconnaissance to remote code execution on the underlying server. Five vulnerabilities were discovered and chained together to achieve full server compromise — none would have been devastating in isolation, but combined they were. The engagement covered IDOR, weak password reset, file upload bypass, and web shell deployment leading to a reverse shell and flag capture.<br><br>
+        <strong style="color:var(--text);font-size:12px;">VULNERABILITY CHAIN</strong><br>
+        <span style="font-size:12px;color:var(--text2);">
+        1. <strong style="color:var(--text);">Reconnaissance</strong> — Nmap revealed ports 22, 80, 3306, 8080. HTTP headers exposed Apache + PHP + MySQL stack. Gobuster discovered /admin, /api, /reset.php, and /uploads.<br>
+        2. <strong style="color:var(--text);">IDOR</strong> — Manipulating the id parameter on /profile.php and /api/user exposed all user profiles including admin Sarah Mitchell's email (s.mitchell@recruitx.thm) with no authorisation checks.<br>
+        3. <strong style="color:var(--text);">Weak Password Reset</strong> — Reset tokens were displayed in the HTTP response instead of sent via email, no rate limiting existed, and tokens were only 6 digits. Used to take over the administrator account.<br>
+        4. <strong style="color:var(--text);">File Upload Bypass</strong> — Admin upload form used a client-side accept attribute and a server-side blocklist. The .phtml extension bypassed the filter and was executed as PHP by Apache.<br>
+        5. <strong style="color:var(--text);">Remote Code Execution</strong> — Uploaded a PHP web shell via .phtml, confirmed code execution as www-data, read /etc/passwd, then upgraded to a full reverse shell via netcat. Flag captured: THM{ch41n3d_vulns_4r3_d3v4st4t1ng}.
+        </span>
+      </div>
+      <div class="card-tags">
+        <span class="tag">nmap</span>
+        <span class="tag">gobuster</span>
+        <span class="tag">idor</span>
+        <span class="tag">password-reset-abuse</span>
+        <span class="tag">file-upload-bypass</span>
+        <span class="tag">web-shell</span>
+        <span class="tag">reverse-shell</span>
+        <span class="tag">netcat</span>
+        <span class="tag">rce</span>
+        <span class="tag">curl</span>
+      </div>
+      <a href="#" class="card-link">View Write-up</a>
+    </div>
+
     <!-- ADD WRITE-UP CARDS HERE ↓
     <div class="project-card" data-platform="THM" data-difficulty="easy">
       <div class="card-meta">
@@ -629,6 +661,11 @@
     <div class="technique-item"><span class="technique-name">port-scanning</span><span class="technique-count">1</span></div>
     <div class="technique-item"><span class="technique-name">web-enumeration</span><span class="technique-count">1</span></div>
     <div class="technique-item"><span class="technique-name">exploitation</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">idor</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">password-reset-abuse</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">file-upload-bypass</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">reverse-shell</span><span class="technique-count">1</span></div>
+    <div class="technique-item"><span class="technique-name">remote-code-execution</span><span class="technique-count">1</span></div>
     <!-- ADD MORE TECHNIQUES HERE ↓ -->
   </div>
 </section>
@@ -645,10 +682,10 @@
     <div class="tool-item"><span class="tool-name">webgoat</span><span class="tool-count">1 use</span></div>
     <div class="tool-item"><span class="tool-name">win. firewall</span><span class="tool-count">1 use</span></div>
     <div class="tool-item"><span class="tool-name">python</span><span class="tool-count">1 use</span></div>
-    <div class="tool-item"><span class="tool-name">nmap</span><span class="tool-count">1 use</span></div>
-    <div class="tool-item"><span class="tool-name">gobuster</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">nmap</span><span class="tool-count">2 uses</span></div>
+    <div class="tool-item"><span class="tool-name">gobuster</span><span class="tool-count">2 uses</span></div>
     <div class="tool-item"><span class="tool-name">metasploit</span><span class="tool-count">1 use</span></div>
-    <div class="tool-item"><span class="tool-name">netcat</span><span class="tool-count">1 use</span></div>
+    <div class="tool-item"><span class="tool-name">netcat</span><span class="tool-count">2 uses</span></div>
     <div class="tool-item"><span class="tool-name">ffuf</span><span class="tool-count">1 use</span></div>
     <div class="tool-item"><span class="tool-name">ssh</span><span class="tool-count">1 use</span></div>
     <!-- ADD MORE TOOLS HERE ↓ -->
