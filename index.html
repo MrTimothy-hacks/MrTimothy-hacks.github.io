@@ -257,9 +257,33 @@
     padding: 1.5rem;
     position: relative;
     transition: background 0.2s;
-    cursor: default;
+    cursor: pointer;
   }
   .project-card:hover { background: var(--bg3); }
+  .card-collapsible {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+  .project-card.open .card-collapsible {
+    max-height: 600px;
+    opacity: 1;
+  }
+  .card-toggle {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.2s;
+  }
+  .project-card:hover .card-toggle { color: var(--accent); }
+  .card-toggle::before { content: '[ + ]'; }
+  .project-card.open .card-toggle::before { content: '[ - ]'; }
   .project-card::before {
     content: '';
     position: absolute;
@@ -304,28 +328,70 @@
   }
   .empty-state p span { color: var(--accent); }
 
-  .techniques-layout {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 0.75rem;
-  }
-  .technique-item {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 0.6rem 1rem;
+  /* ACCORDION SHARED */
+  .accordion-list { display: flex; flex-direction: column; gap: 2px; }
+  .accordion-item {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 2px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .accordion-item:hover { border-color: var(--dim); }
+  .accordion-item.open { border-color: var(--accent); }
+  .accordion-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1rem;
+    cursor: pointer;
+    user-select: none;
+  }
+  .accordion-left { display: flex; align-items: center; gap: 0.75rem; }
+  .accordion-name { font-family: var(--mono); font-size: 12px; color: var(--text); }
+  .accordion-count {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    background: rgba(0,255,157,0.08);
+    border: 1px solid rgba(0,255,157,0.15);
+    padding: 1px 8px;
+    border-radius: 1px;
+  }
+  .accordion-arrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--dim);
+    transition: transform 0.25s ease, color 0.2s;
+  }
+  .accordion-item.open .accordion-arrow { transform: rotate(90deg); color: var(--accent); }
+  .accordion-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.25s ease;
+    padding: 0 1rem;
+  }
+  .accordion-item.open .accordion-body {
+    max-height: 200px;
+    padding: 0 1rem 0.75rem;
+  }
+  .accordion-links { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .accordion-link {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    background: rgba(0,196,255,0.06);
+    border: 1px solid rgba(0,196,255,0.15);
+    padding: 2px 10px;
+    border-radius: 1px;
     transition: all 0.2s;
   }
-  .technique-item:hover { border-color: var(--dim); background: var(--bg3); }
-  .technique-name { font-family: var(--mono); font-size: 12px; color: var(--text); }
-  .technique-count { font-family: var(--mono); font-size: 11px; color: var(--accent); background: rgba(0,255,157,0.08); padding: 1px 7px; border-radius: 1px; }
-
-  .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 0.5rem; }
-  .tool-item { text-align: center; padding: 0.75rem 0.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 2px; transition: all 0.2s; cursor: default; }
-  .tool-item:hover { border-color: var(--accent2); background: var(--bg3); }
-  .tool-name { font-family: var(--mono); font-size: 12px; color: var(--text); display: block; }
-  .tool-count { font-family: var(--mono); font-size: 10px; color: var(--text2); margin-top: 2px; display: block; }
+  .accordion-link:hover { color: var(--accent); border-color: var(--accent); background: rgba(0,255,157,0.06); }
+  .accordion-cols {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2px;
+  }
 
   .certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
   .cert-card {
@@ -521,6 +587,7 @@
         <span class="badge-platform">Redynox · 2026</span>
       </div>
       <div class="card-title">Network Security &amp; Web App Pentesting</div>
+      <div class="card-collapsible">
       <div class="card-desc">
         Analysed live home network traffic with Wireshark and uncovered a real vulnerability: the router's admin interface communicating over unencrypted HTTP, exposing credentials to interception. Configured Windows Defender Firewall rules to block Telnet and restrict unauthorized inbound connections. Performed automated scanning with OWASP ZAP on WebGoat (1,700+ requests), then manually exploited SQL Injection using a blind injection technique to authenticate as another user without knowing their password, and demonstrated stored XSS via a script payload that confirmed session-level access.
       </div>
@@ -555,6 +622,8 @@
         <span class="tag">offensive-thinking</span>
       </div>
       <a href="DEVELOPMENT OF A HYBRID RULE-BASED AND MACHINE LEARNING SYSTEM FOR  PHISHING EMAIL DETECTION.pdf" class="card-link" style="color:var(--accent2);" target="_blank">View Research Paper</a>
+      </div>
+      <div class="card-toggle"></div>
     </div>
 
   </div>
@@ -581,6 +650,7 @@
         <span class="badge-platform">Redynox Internship · 2026</span>
       </div>
       <div class="card-title">Network Security & Web App Vulnerability Assessment</div>
+      <div class="card-collapsible">
       <div class="card-desc">
         Identified a live router vulnerability exposing credentials over unencrypted HTTP, manually exploited SQL Injection and Stored XSS on WebGoat, and configured Windows Defender Firewall rules to block insecure protocols. Full methodology and findings documented.
       </div>
@@ -623,7 +693,7 @@
         <span class="tag">rce</span>
         <span class="tag">curl</span>
       </div>
-      <a href="#" class="card-link">View Write-up</a>
+      <a href="guided-pentest-web.html" class="card-link">View Write-up</a>
     </div>
 
     <!-- ADD WRITE-UP CARDS HERE ↓
@@ -639,6 +709,8 @@
         <span class="tag">privilege-escalation</span>
       </div>
       <a href="#" class="card-link">View Write-up</a>
+      </div>
+      <div class="card-toggle"></div>
     </div>
     -->
   </div>
@@ -650,22 +722,222 @@
 <section class="section-alt" id="techniques">
   <p class="section-label">attack_techniques</p>
   <h2 class="section-title">Techniques Practiced</h2>
-  <div class="techniques-layout" id="techniques-list">
-    <div class="technique-item"><span class="technique-name">network-analysis</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">web-app-pentesting</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">sql-injection</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">stored-xss</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">csrf</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">firewall-configuration</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">threat-detection</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">port-scanning</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">web-enumeration</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">exploitation</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">idor</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">password-reset-abuse</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">file-upload-bypass</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">reverse-shell</span><span class="technique-count">1</span></div>
-    <div class="technique-item"><span class="technique-name">remote-code-execution</span><span class="technique-count">1</span></div>
+  <div class="accordion-cols" id="techniques-list">
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">network-analysis</span>
+          <span class="accordion-count">2</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">web-app-pentesting</span>
+          <span class="accordion-count">2</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">sql-injection</span>
+          <span class="accordion-count">2</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">stored-xss</span>
+          <span class="accordion-count">2</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">csrf</span>
+          <span class="accordion-count">1</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">firewall-configuration</span>
+          <span class="accordion-count">1</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">threat-detection</span>
+          <span class="accordion-count">1</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="DEVELOPMENT OF A HYBRID RULE-BASED AND MACHINE LEARNING SYSTEM FOR  PHISHING EMAIL DETECTION.pdf" class="accordion-link" target="_blank">Phishing Detection Project</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">port-scanning</span>
+          <span class="accordion-count">1</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">web-enumeration</span>
+          <span class="accordion-count">1</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">idor</span>
+          <span class="accordion-count">1</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">password-reset-abuse</span>
+          <span class="accordion-count">1</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">file-upload-bypass</span>
+          <span class="accordion-count">1</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">reverse-shell</span>
+          <span class="accordion-count">1</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left">
+          <span class="accordion-name">remote-code-execution</span>
+          <span class="accordion-count">1</span>
+        </div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body">
+        <div class="accordion-links">
+          <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+        </div>
+      </div>
+    </div>
+
     <!-- ADD MORE TECHNIQUES HERE ↓ -->
   </div>
 </section>
@@ -676,18 +948,121 @@
 <section id="tools">
   <p class="section-label">toolbox</p>
   <h2 class="section-title">Tools Practiced</h2>
-  <div class="tools-grid" id="tools-list">
-    <div class="tool-item"><span class="tool-name">wireshark</span><span class="tool-count">1 use</span></div>
-    <div class="tool-item"><span class="tool-name">owasp zap</span><span class="tool-count">1 use</span></div>
-    <div class="tool-item"><span class="tool-name">webgoat</span><span class="tool-count">1 use</span></div>
-    <div class="tool-item"><span class="tool-name">win. firewall</span><span class="tool-count">1 use</span></div>
-    <div class="tool-item"><span class="tool-name">python</span><span class="tool-count">1 use</span></div>
-    <div class="tool-item"><span class="tool-name">nmap</span><span class="tool-count">2 uses</span></div>
-    <div class="tool-item"><span class="tool-name">gobuster</span><span class="tool-count">2 uses</span></div>
-    <div class="tool-item"><span class="tool-name">metasploit</span><span class="tool-count">1 use</span></div>
-    <div class="tool-item"><span class="tool-name">netcat</span><span class="tool-count">2 uses</span></div>
-    <div class="tool-item"><span class="tool-name">ffuf</span><span class="tool-count">1 use</span></div>
-    <div class="tool-item"><span class="tool-name">ssh</span><span class="tool-count">1 use</span></div>
+  <div class="accordion-cols" id="tools-list">
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">nmap</span><span class="accordion-count">2</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+        <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+      </div></div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">gobuster</span><span class="accordion-count">2</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+        <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+      </div></div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">netcat</span><span class="accordion-count">2</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+        <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+      </div></div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">wireshark</span><span class="accordion-count">1</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+      </div></div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">owasp-zap</span><span class="accordion-count">1</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+      </div></div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">win. firewall</span><span class="accordion-count">1</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="accordion-link" target="_blank">Internship Report</a>
+      </div></div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">python</span><span class="accordion-count">1</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="DEVELOPMENT OF A HYBRID RULE-BASED AND MACHINE LEARNING SYSTEM FOR  PHISHING EMAIL DETECTION.pdf" class="accordion-link" target="_blank">Phishing Detection Project</a>
+      </div></div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">metasploit</span><span class="accordion-count">1</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+      </div></div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">ffuf</span><span class="accordion-count">1</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+      </div></div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">ssh</span><span class="accordion-count">1</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+      </div></div>
+    </div>
+
+    <div class="accordion-item">
+      <div class="accordion-header" onclick="toggleAccordion(this)">
+        <div class="accordion-left"><span class="accordion-name">curl</span><span class="accordion-count">1</span></div>
+        <span class="accordion-arrow">▶</span>
+      </div>
+      <div class="accordion-body"><div class="accordion-links">
+        <a href="guided-pentest-web.html" class="accordion-link">Guided Pentest: Web</a>
+      </div></div>
+    </div>
+
     <!-- ADD MORE TOOLS HERE ↓ -->
   </div>
 </section>
@@ -796,6 +1171,20 @@
   });
 
   window.addEventListener('load', updateStats);
+
+  // Accordion toggle
+  function toggleAccordion(header) {
+    const item = header.parentElement;
+    item.classList.toggle('open');
+  }
+
+  // Collapsible cards
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') return; // let links work normally
+      card.classList.toggle('open');
+    });
+  });
 
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobile-menu');
