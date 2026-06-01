@@ -244,89 +244,70 @@
     margin-bottom: 2.5rem;
   }
 
-  .projects-grid {
+  /* CARD GRID */
+  .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 0.75rem;
     margin-bottom: 2rem;
   }
-  .project-card {
+  .card {
+    display: block;
     background: var(--card);
-    padding: 1.5rem;
-    position: relative;
-    transition: background 0.2s;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.25rem 1.5rem;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
     cursor: pointer;
   }
-  .project-card:hover { background: var(--bg3); }
-  .card-collapsible {
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.4s ease, opacity 0.3s ease;
-    opacity: 0;
-  }
-  .project-card.open .card-collapsible {
-    max-height: 600px;
-    opacity: 1;
-  }
-  .card-toggle {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--dim);
-    letter-spacing: 0.1em;
-    margin-top: 0.5rem;
+  .card:hover { border-color: var(--accent); background: var(--bg3); }
+  .card-top {
     display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    transition: color 0.2s;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
   }
-  .project-card:hover .card-toggle { color: var(--accent); }
-  .card-toggle::before { content: '[ + ]'; }
-  .project-card.open .card-toggle::before { content: '[ - ]'; }
-  .project-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px; height: 0;
-    background: var(--accent);
-    transition: height 0.3s ease;
+  .card-title {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: #e8f0f5;
+    line-height: 1.3;
   }
-  .project-card:hover::before { height: 100%; }
-  .card-meta { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
   .badge {
     font-family: var(--mono);
     font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 1px;
+    padding: 3px 10px;
+    border-radius: 3px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
-  .badge-easy { background: rgba(0,255,157,0.1); color: var(--accent); border: 1px solid rgba(0,255,157,0.2); }
-  .badge-medium { background: rgba(255,180,0,0.1); color: #ffb400; border: 1px solid rgba(255,180,0,0.2); }
-  .badge-hard { background: rgba(255,68,68,0.1); color: var(--danger); border: 1px solid rgba(255,68,68,0.2); }
-  .badge-platform { font-family: var(--mono); font-size: 10px; color: var(--text2); letter-spacing: 0.06em; text-transform: uppercase; }
-  .card-title { font-family: var(--cond); font-size: 1.15rem; font-weight: 700; color: #e8f0f5; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.5rem; }
-  .card-desc { font-size: 13px; color: var(--text2); margin-bottom: 1rem; line-height: 1.5; }
-  .card-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1rem; }
-  .tag { font-family: var(--mono); font-size: 10px; color: var(--dim); border: 1px solid var(--border); padding: 2px 7px; border-radius: 1px; transition: all 0.2s; }
-  .project-card:hover .tag { color: var(--text2); border-color: var(--dim); }
-  .card-link { font-family: var(--mono); font-size: 11px; color: var(--accent2); letter-spacing: 0.06em; display: inline-flex; align-items: center; gap: 0.35rem; }
-  .card-link:hover { color: var(--accent); }
-  .card-link::after { content: ' →'; }
-
-  .empty-state {
-    grid-column: 1 / -1;
-    padding: 4rem 2rem;
-    text-align: center;
-    background: var(--card);
-  }
-  .empty-state p {
+  .badge-easy { background: rgba(0,255,157,0.12); color: var(--accent); border: 1px solid rgba(0,255,157,0.25); }
+  .badge-medium { background: rgba(255,180,0,0.12); color: #ffb400; border: 1px solid rgba(255,180,0,0.25); }
+  .badge-hard { background: rgba(255,68,68,0.12); color: var(--danger); border: 1px solid rgba(255,68,68,0.25); }
+  .badge-project { background: rgba(0,196,255,0.12); color: var(--accent2); border: 1px solid rgba(0,196,255,0.25); }
+  .card-sub {
     font-family: var(--mono);
-    font-size: 13px;
+    font-size: 11px;
     color: var(--dim);
+    margin-bottom: 0.85rem;
+    letter-spacing: 0.04em;
   }
-  .empty-state p span { color: var(--accent); }
+  .card-sub span { color: var(--text2); }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .tag {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--dim); border: 1px solid var(--border);
+    padding: 2px 7px; border-radius: 2px;
+    transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .card:hover .tag { color: var(--text2); border-color: var(--dim); }
+
+
 
   /* ACCORDION SHARED */
   .accordion-list { display: flex; flex-direction: column; gap: 2px; }
@@ -579,55 +560,44 @@
 <section id="projects">
   <p class="section-label">hands_on_work</p>
   <h2 class="section-title">Projects</h2>
-  <div class="projects-grid" style="margin-bottom:0;">
+  <div class="card-grid">
 
-    <div class="project-card" style="cursor:default;">
-      <div class="card-meta">
-        <span class="badge badge-easy" style="background:rgba(0,196,255,0.1);color:var(--accent2);border-color:rgba(0,196,255,0.2);">Internship</span>
-        <span class="badge-platform">Redynox · 2026</span>
+    <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="card" target="_blank">
+      <div class="card-top">
+        <div class="card-title">Network Security &amp; Web App Pentesting</div>
+        <span class="badge badge-project">Internship</span>
       </div>
-      <div class="card-title">Network Security &amp; Web App Pentesting</div>
-      <div class="card-collapsible">
-      <div class="card-desc">
-        Analysed live home network traffic with Wireshark and uncovered a real vulnerability: the router's admin interface communicating over unencrypted HTTP, exposing credentials to interception. Configured Windows Defender Firewall rules to block Telnet and restrict unauthorized inbound connections. Performed automated scanning with OWASP ZAP on WebGoat (1,700+ requests), then manually exploited SQL Injection using a blind injection technique to authenticate as another user without knowing their password, and demonstrated stored XSS via a script payload that confirmed session-level access.
-      </div>
+      <div class="card-sub"><span>Redynox Cybersecurity</span> &nbsp;·&nbsp; 2026</div>
       <div class="card-tags">
         <span class="tag">wireshark</span>
         <span class="tag">owasp-zap</span>
-        <span class="tag">webgoat</span>
         <span class="tag">sql-injection</span>
-        <span class="tag">xss</span>
-        <span class="tag">csrf</span>
+        <span class="tag">stored-xss</span>
         <span class="tag">firewall-config</span>
         <span class="tag">network-analysis</span>
       </div>
-      <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="card-link" style="color:var(--accent2);" target="_blank">View Internship Report</a>
-    </div>
+    </a>
 
-    <div class="project-card" style="cursor:default;">
-      <div class="card-meta">
-        <span class="badge badge-easy" style="background:rgba(0,196,255,0.1);color:var(--accent2);border-color:rgba(0,196,255,0.2);">Final Year Project</span>
-        <span class="badge-platform">Bowen University</span>
+    <a href="DEVELOPMENT OF A HYBRID RULE-BASED AND MACHINE LEARNING SYSTEM FOR  PHISHING EMAIL DETECTION.pdf" class="card" target="_blank">
+      <div class="card-top">
+        <div class="card-title">Hybrid Phishing Email Detection System</div>
+        <span class="badge badge-project">Final Year</span>
       </div>
-      <div class="card-title">Hybrid Phishing Email Detection System</div>
-      <div class="card-desc">
-        Built a phishing detection framework combining rule-based logic with machine learning classification, designed from an attacker-first perspective: studying real phishing URL structures, sender spoofing behaviour, and social engineering patterns before building defences against them. Evaluated using accuracy, recall, and F1-score metrics to assess real-world detection reliability.
-      </div>
+      <div class="card-sub"><span>Bowen University</span> &nbsp;·&nbsp; 2025</div>
       <div class="card-tags">
         <span class="tag">machine-learning</span>
         <span class="tag">threat-detection</span>
         <span class="tag">email-security</span>
-        <span class="tag">rule-based-logic</span>
         <span class="tag">python</span>
-        <span class="tag">offensive-thinking</span>
+        <span class="tag">rule-based-logic</span>
       </div>
-      <a href="DEVELOPMENT OF A HYBRID RULE-BASED AND MACHINE LEARNING SYSTEM FOR  PHISHING EMAIL DETECTION.pdf" class="card-link" style="color:var(--accent2);" target="_blank">View Research Paper</a>
-      </div>
-      <div class="card-toggle"></div>
-    </div>
+    </a>
 
+    <!-- ADD MORE PROJECTS HERE ↓ -->
   </div>
 </section>
+
+<hr class="divider">
 
 <hr class="divider">
 
@@ -638,22 +608,19 @@
   <div class="filter-row">
     <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
     <button class="filter-btn" onclick="filterCards('THM', this)">TryHackMe</button>
-    <button class="filter-btn" onclick="filterCards('HTB', this)">HackTheBox</button>
+    <button class="filter-btn" onclick="filterCards('real-world', this)">Real-World</button>
     <button class="filter-btn" onclick="filterCards('easy', this)">Easy</button>
     <button class="filter-btn" onclick="filterCards('medium', this)">Medium</button>
     <button class="filter-btn" onclick="filterCards('hard', this)">Hard</button>
   </div>
-  <div class="projects-grid" id="writeups-grid">
-    <div class="project-card" data-platform="Internship" data-difficulty="medium">
-      <div class="card-meta">
+  <div class="card-grid" id="writeups-grid">
+
+    <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="card" data-platform="real-world" data-difficulty="medium" target="_blank">
+      <div class="card-top">
+        <div class="card-title">Network Security &amp; Web App Vulnerability Assessment</div>
         <span class="badge badge-medium">Real-World</span>
-        <span class="badge-platform">Redynox Internship · 2026</span>
       </div>
-      <div class="card-title">Network Security & Web App Vulnerability Assessment</div>
-      <div class="card-collapsible">
-      <div class="card-desc">
-        Identified a live router vulnerability exposing credentials over unencrypted HTTP, manually exploited SQL Injection and Stored XSS on WebGoat, and configured Windows Defender Firewall rules to block insecure protocols. Full methodology and findings documented.
-      </div>
+      <div class="card-sub"><span>Redynox Internship</span> &nbsp;·&nbsp; 2026</div>
       <div class="card-tags">
         <span class="tag">wireshark</span>
         <span class="tag">owasp-zap</span>
@@ -662,25 +629,14 @@
         <span class="tag">firewall-config</span>
         <span class="tag">network-analysis</span>
       </div>
-      <a href="Timothy_Segun-Olufemi_Internship_Report.pdf" class="card-link" target="_blank">View Full Report</a>
-    </div>
-    <div class="project-card" data-platform="THM" data-difficulty="medium">
-      <div class="card-meta">
+    </a>
+
+    <a href="guided-pentest-web.html" class="card" data-platform="THM" data-difficulty="medium">
+      <div class="card-top">
+        <div class="card-title">Guided Pentest: Web</div>
         <span class="badge badge-medium">Medium</span>
-        <span class="badge-platform">THM · Jr Pentester Path</span>
       </div>
-      <div class="card-title">Guided Pentest: Web</div>
-      <div class="card-desc">
-        A full web application penetration test from initial reconnaissance to remote code execution on the underlying server. Five vulnerabilities were discovered and chained together to achieve full server compromise — none would have been devastating in isolation, but combined they were. The engagement covered IDOR, weak password reset, file upload bypass, and web shell deployment leading to a reverse shell and flag capture.<br><br>
-        <strong style="color:var(--text);font-size:12px;">VULNERABILITY CHAIN</strong><br>
-        <span style="font-size:12px;color:var(--text2);">
-        1. <strong style="color:var(--text);">Reconnaissance</strong> — Nmap revealed ports 22, 80, 3306, 8080. HTTP headers exposed Apache + PHP + MySQL stack. Gobuster discovered /admin, /api, /reset.php, and /uploads.<br>
-        2. <strong style="color:var(--text);">IDOR</strong> — Manipulating the id parameter on /profile.php and /api/user exposed all user profiles including admin Sarah Mitchell's email (s.mitchell@recruitx.thm) with no authorisation checks.<br>
-        3. <strong style="color:var(--text);">Weak Password Reset</strong> — Reset tokens were displayed in the HTTP response instead of sent via email, no rate limiting existed, and tokens were only 6 digits. Used to take over the administrator account.<br>
-        4. <strong style="color:var(--text);">File Upload Bypass</strong> — Admin upload form used a client-side accept attribute and a server-side blocklist. The .phtml extension bypassed the filter and was executed as PHP by Apache.<br>
-        5. <strong style="color:var(--text);">Remote Code Execution</strong> — Uploaded a PHP web shell via .phtml, confirmed code execution as www-data, read /etc/passwd, then upgraded to a full reverse shell via netcat. Flag captured: THM{ch41n3d_vulns_4r3_d3v4st4t1ng}.
-        </span>
-      </div>
+      <div class="card-sub"><span>THM</span> &nbsp;·&nbsp; Jr Pentester Path &nbsp;·&nbsp; May 2026</div>
       <div class="card-tags">
         <span class="tag">nmap</span>
         <span class="tag">gobuster</span>
@@ -689,33 +645,25 @@
         <span class="tag">file-upload-bypass</span>
         <span class="tag">web-shell</span>
         <span class="tag">reverse-shell</span>
-        <span class="tag">netcat</span>
         <span class="tag">rce</span>
-        <span class="tag">curl</span>
       </div>
-      <a href="guided-pentest-web.html" class="card-link">View Write-up</a>
-    </div>
+    </a>
 
     <!-- ADD WRITE-UP CARDS HERE ↓
-    <div class="project-card" data-platform="THM" data-difficulty="easy">
-      <div class="card-meta">
+    <a href="your-writeup.html" class="card" data-platform="THM" data-difficulty="easy">
+      <div class="card-top">
+        <div class="card-title">Room Name</div>
         <span class="badge badge-easy">Easy</span>
-        <span class="badge-platform">THM</span>
       </div>
-      <div class="card-title">Room Name</div>
-      <div class="card-desc">Brief description of what you exploited.</div>
+      <div class="card-sub"><span>THM</span> &nbsp;·&nbsp; Path &nbsp;·&nbsp; Month Year</div>
       <div class="card-tags">
         <span class="tag">nmap</span>
         <span class="tag">privilege-escalation</span>
       </div>
-      <a href="#" class="card-link">View Write-up</a>
-      </div>
-      <div class="card-toggle"></div>
-    </div>
+    </a>
     -->
   </div>
 </section>
-
 <hr class="divider">
 
 <!-- TECHNIQUES -->
@@ -1117,7 +1065,7 @@
 
 <script>
   function updateStats() {
-    const writeups = document.querySelectorAll('#writeups-grid .project-card').length;
+    const writeups = document.querySelectorAll('#writeups-grid .card').length;
     const techniques = document.querySelectorAll('#techniques-list .technique-item').length;
     const tools = document.querySelectorAll('#tools-list .tool-item').length;
 
@@ -1139,7 +1087,7 @@
   function filterCards(filter, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelectorAll('#writeups-grid .project-card').forEach(card => {
+    document.querySelectorAll('#writeups-grid .card').forEach(card => {
       if (filter === 'all') {
         card.style.display = '';
       } else if (['easy','medium','hard'].includes(filter)) {
@@ -1150,7 +1098,7 @@
     });
   }
 
-  const cards = document.querySelectorAll('.project-card, .cert-card, .technique-item, .tool-item');
+  const cards = document.querySelectorAll('.card, .cert-card, .accordion-item');
   const obs = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
       if (e.isIntersecting) {
@@ -1178,13 +1126,7 @@
     item.classList.toggle('open');
   }
 
-  // Collapsible cards
-  document.querySelectorAll('.project-card').forEach(card => {
-    card.addEventListener('click', (e) => {
-      if (e.target.tagName === 'A') return; // let links work normally
-      card.classList.toggle('open');
-    });
-  });
+
 
   const hamburger = document.getElementById('hamburger');
   const mobileMenu = document.getElementById('mobile-menu');
