@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Internship Report: Network Security & Web App Pentesting | Timmyhacks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f; --bg2: #0f1318; --bg3: #141a20; --card: #111619;
+    --border: #1e2a32; --accent: #00ff9d; --accent2: #00c4ff;
+    --dim: #3a4a55; --text: #cdd8df; --text2: #7a99aa;
+    --danger: #ff4444; --warning: #ffb400;
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Barlow', sans-serif;
+    --cond: 'Barlow Condensed', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.7; overflow-x: hidden; }
+  a { color: var(--accent2); text-decoration: none; }
+  a:hover { color: var(--accent); }
+  ::selection { background: var(--accent); color: #000; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem; height: 56px;
+    background: rgba(10,12,15,0.92); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo { font-family: var(--mono); font-size: 13px; color: var(--accent); letter-spacing: 0.04em; }
+  .nav-logo span { color: var(--text2); }
+  .nav-back { font-family: var(--mono); font-size: 12px; color: var(--text2); letter-spacing: 0.08em; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
+  .nav-back:hover { color: var(--accent); }
+  .nav-back::before { content: "←"; }
+
+  .breadcrumb {
+    margin-top: 56px; padding: 0.75rem 2.5rem;
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    font-family: var(--mono); font-size: 11px; color: var(--dim);
+    display: flex; gap: 0.5rem; align-items: center;
+  }
+  .breadcrumb a { color: var(--text2); }
+  .breadcrumb a:hover { color: var(--accent); }
+
+  .writeup-hero {
+    padding: 3rem 2.5rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative; overflow: hidden;
+  }
+  .writeup-hero::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 50% 80% at 100% 50%, rgba(0,255,157,0.03) 0%, transparent 70%);
+  }
+  .hero-meta { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .badge { font-family: var(--mono); font-size: 11px; padding: 3px 10px; border-radius: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .badge-real { background: rgba(0,196,255,0.1); color: var(--accent2); border: 1px solid rgba(0,196,255,0.25); }
+  .badge-date { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+  .writeup-title { font-family: var(--cond); font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 900; text-transform: uppercase; color: #e8f0f5; letter-spacing: 0.01em; line-height: 1; margin-bottom: 1rem; }
+  .writeup-title em { font-style: normal; color: var(--accent); }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+  .tag { font-family: var(--mono); font-size: 10px; color: var(--dim); border: 1px solid var(--border); padding: 2px 8px; border-radius: 1px; transition: all 0.2s; }
+  .tag:hover { color: var(--text2); border-color: var(--dim); }
+
+  .summary-box {
+    margin: 2rem 2.5rem; padding: 1.25rem 1.5rem;
+    background: var(--card); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); border-radius: 2px;
+  }
+  .summary-box p { font-size: 14px; color: var(--text2); line-height: 1.7; }
+  .summary-box strong { color: var(--text); }
+
+  .writeup-body { max-width: 860px; margin: 0 auto; padding: 0 2.5rem 5rem; }
+
+  .step-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-num {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    background: rgba(0,255,157,0.08); border: 1px solid rgba(0,255,157,0.2);
+    padding: 3px 10px; border-radius: 1px; flex-shrink: 0;
+  }
+  .step-title { font-family: var(--cond); font-size: 1.3rem; font-weight: 900; text-transform: uppercase; color: #e8f0f5; letter-spacing: 0.03em; }
+
+  .prose { font-size: 14px; color: var(--text2); margin-bottom: 1rem; line-height: 1.75; }
+  .prose strong { color: var(--text); font-weight: 600; }
+  code { font-family: var(--mono); font-size: 12px; color: var(--accent2); background: rgba(0,196,255,0.06); padding: 1px 6px; border-radius: 1px; }
+
+  .code-block { background: #080b0e; border: 1px solid var(--border); border-radius: 2px; margin: 1rem 0; overflow: hidden; }
+  .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 1rem; background: var(--bg3); border-bottom: 1px solid var(--border); }
+  .code-label { font-family: var(--mono); font-size: 10px; color: var(--dim); letter-spacing: 0.1em; text-transform: uppercase; }
+  .code-copy { font-family: var(--mono); font-size: 10px; color: var(--dim); cursor: pointer; background: none; border: none; padding: 0; transition: color 0.2s; letter-spacing: 0.06em; }
+  .code-copy:hover { color: var(--accent); }
+  pre { padding: 1rem; overflow-x: auto; font-family: var(--mono); font-size: 12px; line-height: 1.6; color: #a8c5d0; }
+  .hl-cmd { color: var(--accent); }
+  .hl-flag { color: var(--accent2); }
+  .hl-val { color: var(--warning); }
+  .hl-comment { color: var(--dim); font-style: italic; }
+  .hl-success { color: #7fff7f; }
+  .hl-prompt { color: var(--dim); }
+  .hl-danger { color: var(--danger); }
+
+  .finding { background: var(--card); border: 1px solid var(--border); border-radius: 2px; padding: 1.25rem 1.5rem; margin: 1rem 0; position: relative; }
+  .finding::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; border-radius: 2px 0 0 2px; }
+  .finding.critical::before { background: var(--danger); }
+  .finding.high::before { background: var(--warning); }
+  .finding.medium::before { background: #ff8800; }
+  .finding.info::before { background: var(--accent2); }
+  .finding-title { font-family: var(--mono); font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .finding.critical .finding-title { color: var(--danger); }
+  .finding.high .finding-title { color: var(--warning); }
+  .finding.medium .finding-title { color: #ff8800; }
+  .finding.info .finding-title { color: var(--accent2); }
+  .finding p { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+  .scan-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 13px; }
+  .scan-table th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); background: var(--bg3); padding: 0.6rem 1rem; border: 1px solid var(--border); text-align: left; }
+  .scan-table td { padding: 0.7rem 1rem; border: 1px solid var(--border); color: var(--text2); vertical-align: top; }
+  .scan-table tr:hover td { background: var(--bg3); }
+  .sev { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border-radius: 1px; text-transform: uppercase; white-space: nowrap; }
+  .sev-high { background: rgba(255,180,0,0.1); color: var(--warning); border: 1px solid rgba(255,180,0,0.25); }
+  .sev-medium { background: rgba(255,136,0,0.1); color: #ff8800; border: 1px solid rgba(255,136,0,0.25); }
+  .sev-low { background: rgba(0,196,255,0.1); color: var(--accent2); border: 1px solid rgba(0,196,255,0.25); }
+
+  .callout { padding: 0.9rem 1.25rem; border-radius: 2px; margin: 1rem 0; font-size: 13px; line-height: 1.65; border-left: 3px solid; }
+  .callout.note { background: rgba(0,196,255,0.05); border-color: var(--accent2); color: var(--text2); }
+  .callout.warn { background: rgba(255,180,0,0.05); border-color: var(--warning); color: var(--text2); }
+  .callout.danger { background: rgba(255,68,68,0.05); border-color: var(--danger); color: var(--text2); }
+  .callout strong { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .callout.note strong { color: var(--accent2); }
+  .callout.warn strong { color: var(--warning); }
+  .callout.danger strong { color: var(--danger); }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+  .page-footer { border-top: 1px solid var(--border); padding: 2rem 2.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+  .footer-link { font-family: var(--mono); font-size: 12px; color: var(--text2); letter-spacing: 0.06em; padding: 0.5rem 1rem; border: 1px solid var(--border); border-radius: 2px; transition: all 0.2s; }
+  .footer-link:hover { color: var(--accent); border-color: var(--accent); }
+  .footer-link.back::before { content: "← "; }
+  .footer-note { font-family: var(--mono); font-size: 11px; color: var(--dim); }
+
+  @media (max-width: 640px) {
+    nav { padding: 0 1.25rem; }
+    .writeup-hero { padding: 2rem 1.25rem 1.5rem; }
+    .writeup-body { padding: 0 1.25rem 4rem; }
+    .summary-box { margin: 1.5rem 1.25rem; }
+    .breadcrumb { padding: 0.75rem 1.25rem; }
+    .page-footer { padding: 1.5rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo"><span>&gt; </span>timmyhacks<span>.sec</span></div>
+  <a href="index.html" class="nav-back">Back to Portfolio</a>
+</nav>
+
+<div class="breadcrumb">
+  <a href="index.html">Home</a>
+  <span>/</span>
+  <a href="index.html#writeups">Write-ups</a>
+  <span>/</span>
+  <span style="color:var(--text2);">Internship Report</span>
+</div>
+
+<div class="writeup-hero">
+  <div class="hero-meta">
+    <span class="badge badge-real">Real-World</span>
+    <span class="badge-date">Redynox Cybersecurity · 2026</span>
+  </div>
+  <h1 class="writeup-title">Network Security &amp;<br><em>Web App Pentesting</em></h1>
+  <div class="tags">
+    <span class="tag">wireshark</span>
+    <span class="tag">owasp-zap</span>
+    <span class="tag">webgoat</span>
+    <span class="tag">sql-injection</span>
+    <span class="tag">stored-xss</span>
+    <span class="tag">csrf</span>
+    <span class="tag">firewall-configuration</span>
+    <span class="tag">network-analysis</span>
+    <span class="tag">traffic-capture</span>
+  </div>
+</div>
+
+<div class="summary-box">
+  <p>A cybersecurity internship at Redynox covering two core disciplines: <strong>network security analysis</strong> and <strong>web application penetration testing</strong>. All activities were conducted in controlled, legal environments — either on personal home network infrastructure or intentionally vulnerable lab applications designed for security training. A genuine real-world vulnerability was discovered during the network analysis task.</p>
+</div>
+
+<div class="writeup-body">
+
+  <!-- TASK 1 -->
+  <div class="step-header">
+    <span class="step-num">TASK 01</span>
+    <span class="step-title">Network Security Analysis</span>
+  </div>
+
+  <p class="prose"><strong>Objective:</strong> Understand network security fundamentals by researching common threats, implementing basic security measures on a home network, and capturing and analysing live network traffic with Wireshark.</p>
+
+  <div class="step-header" style="margin-top:1.5rem;">
+    <span class="step-num">1.1</span>
+    <span class="step-title">Firewall Configuration</span>
+  </div>
+
+  <p class="prose">Windows Defender Firewall was accessed via <code>wf.msc</code> and confirmed active across all three network profiles (Domain, Private, Public) with inbound connections blocked by default. A custom inbound rule was created to explicitly block Telnet on TCP port 23 — a legacy protocol that transmits all data including credentials in plain text.</p>
+
+  <div class="code-block">
+    <div class="code-header"><span class="code-label">firewall rule — block telnet</span></div>
+    <pre><span class="hl-comment"># Via Windows Defender Firewall — Advanced Security (wf.msc)</span>
+Rule Type:     Inbound
+Protocol:      TCP
+Port:          <span class="hl-val">23 (Telnet)</span>
+Action:        <span class="hl-danger">Block the connection</span>
+Profile:       Domain, Private, Public
+Name:          <span class="hl-val">Block Telnet</span></pre>
+  </div>
+
+  <p class="prose">The home router was also hardened: WPA2 encryption enforced, default admin password changed, and default SSID updated to avoid revealing the router manufacturer.</p>
+
+  <div class="step-header" style="margin-top:1.5rem;">
+    <span class="step-num">1.2</span>
+    <span class="step-title">Live Traffic Analysis with Wireshark</span>
+  </div>
+
+  <p class="prose">Wireshark was installed with the Npcap driver and configured to monitor the active Wi-Fi interface. A live capture session was initiated while browsing to generate diverse traffic. Display filters were applied to isolate specific traffic types:</p>
+
+  <div class="code-block">
+    <div class="code-header"><span class="code-label">wireshark — display filters applied</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+    <pre><span class="hl-comment"># DNS traffic</span>
+<span class="hl-cmd">dns</span>
+<span class="hl-comment"># Result: continuous background queries to router (192.168.8.1)</span>
+<span class="hl-comment"># Domains: fotmob.com, x.com, fonts.gstatic.com, mozilla-ohttp.fastly-edge.com</span>
+
+<span class="hl-comment"># TLS encrypted traffic</span>
+<span class="hl-cmd">tls</span>
+<span class="hl-comment"># Result: 264 encrypted packets (TLSv1.2 + TLSv1.3) — all unreadable Application Data</span>
+<span class="hl-success"># Encryption confirmed working correctly for HTTPS connections</span>
+
+<span class="hl-comment"># HTTP unencrypted traffic</span>
+<span class="hl-cmd">http</span>
+<span class="hl-comment"># Result: unencrypted traffic between machine and router at 192.168.8.1</span>
+<span class="hl-danger"># GET /login.html and GET /api.cgi?path=router&method=get_device_info — PLAINTEXT</span>
+
+<span class="hl-comment"># TCP SYN packets (outbound connections)</span>
+<span class="hl-cmd">tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</span>
+<span class="hl-comment"># Result: 13 outbound connection initiations in 40 seconds</span>
+<span class="hl-comment"># All to known providers: Google, AWS, Fastly, IBM Cloud — no inbound scanning</span></pre>
+  </div>
+
+  <div class="finding high">
+    <div class="finding-title">Real Vulnerability Discovered — Unencrypted Router Admin Interface · High</div>
+    <p>The HTTP filter revealed the router's administrative interface communicating over unencrypted HTTP — including GET requests to <code>/login.html</code> and API calls to <code>/api.cgi</code>. Any attacker on the same network could intercept these requests with Wireshark and capture admin credentials in plain text. <strong>This was a genuine security finding on a live home network, not a simulated lab result.</strong></p>
+  </div>
+
+  <div class="callout note"><strong>Key Observation</strong>Applications make continuous network requests in the background even without active user interaction. DNS queries alone revealed browsing patterns, installed applications, and background services — all without decrypting a single packet.</div>
+
+  <!-- TASK 2 -->
+  <div class="step-header">
+    <span class="step-num">TASK 02</span>
+    <span class="step-title">Web Application Security Assessment</span>
+  </div>
+
+  <p class="prose"><strong>Objective:</strong> Set up an intentionally vulnerable web application, scan it with an automated security tool, and manually exploit SQL Injection, Cross-Site Scripting (XSS), and Cross-Site Request Forgery (CSRF).</p>
+
+  <p class="prose"><strong>Environment:</strong> WebGoat (OWASP) running at <code>localhost:8080</code>, scanned by OWASP ZAP on port 8081.</p>
+
+  <div class="step-header" style="margin-top:1.5rem;">
+    <span class="step-num">2.1</span>
+    <span class="step-title">Automated Scan — OWASP ZAP</span>
+  </div>
+
+  <p class="prose">ZAP's Automated Scan deployed a traditional spider and an AJAX spider to crawl the application, followed by an active scan sending over <strong>1,700 requests</strong>. Results:</p>
+
+  <table class="scan-table">
+    <thead>
+      <tr><th>Vulnerability</th><th>Severity</th><th>Instances</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>SQL Injection</td><td><span class="sev sev-high">High</span></td><td>1</td></tr>
+      <tr><td>Absence of Anti-CSRF Tokens</td><td><span class="sev sev-medium">Medium</span></td><td>5</td></tr>
+      <tr><td>Content Security Policy Header Not Set</td><td><span class="sev sev-medium">Medium</span></td><td>1</td></tr>
+      <tr><td>Missing Anti-Clickjacking Header</td><td><span class="sev sev-medium">Medium</span></td><td>5</td></tr>
+      <tr><td>Spring Actuator Information Leak</td><td><span class="sev sev-medium">Medium</span></td><td>1</td></tr>
+      <tr><td>Cookie without SameSite Attribute</td><td><span class="sev sev-low">Low</span></td><td>1</td></tr>
+      <tr><td>X-Content-Type-Options Header Missing</td><td><span class="sev sev-low">Low</span></td><td>1</td></tr>
+      <tr><td>User Controllable HTML Element Attribute (XSS)</td><td><span class="sev sev-low">Low</span></td><td>1</td></tr>
+    </tbody>
+  </table>
+
+  <div class="step-header" style="margin-top:1.5rem;">
+    <span class="step-num">2.2</span>
+    <span class="step-title">Manual Exploitation — SQL Injection (Blind)</span>
+  </div>
+
+  <p class="prose">The goal was to authenticate as user "Tom" without knowing his password — simulating a real credential theft scenario. Standard login bypass payloads in the login form produced generic error responses (a deliberate design choice to prevent information leakage). Investigation revealed the vulnerability existed in the <strong>registration form</strong> instead — requiring a blind injection approach.</p>
+
+  <div class="code-block">
+    <div class="code-header"><span class="code-label">blind sql injection — character extraction</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+    <pre><span class="hl-comment"># Payload injected into registration username field</span>
+<span class="hl-val">tom' AND substring(password,1,1)='t</span>
+
+<span class="hl-comment"># If response = "User already exists" → condition is TRUE</span>
+<span class="hl-comment"># Meaning: Tom's password begins with the letter 't'</span>
+<span class="hl-comment"># Repeat for each character position until full password extracted</span>
+
+<span class="hl-comment"># Password discovered:</span>
+<span class="hl-success">thisisasecretfortomonly</span>
+
+<span class="hl-comment"># Authenticated successfully as Tom — unauthorized account access confirmed</span></pre>
+  </div>
+
+  <div class="finding high">
+    <div class="finding-title">SQL Injection — Blind · High</div>
+    <p>The application was vulnerable to blind SQL injection in the registration form. By observing different application responses to injected conditions, the full contents of another user's password field were extracted character by character. In a real engagement, this process would be automated with <code>sqlmap</code> to extract complete database contents within seconds.</p>
+  </div>
+
+  <div class="step-header" style="margin-top:1.5rem;">
+    <span class="step-num">2.3</span>
+    <span class="step-title">Manual Exploitation — Stored XSS</span>
+  </div>
+
+  <p class="prose">The Stored XSS module was used to demonstrate the most dangerous form of XSS — where the malicious script is saved to the database and executes automatically in every visitor's browser when the affected page loads.</p>
+
+  <div class="code-block">
+    <div class="code-header"><span class="code-label">stored xss payload</span><button class="code-copy" onclick="copyCode(this)">copy</button></div>
+    <pre><span class="hl-comment"># Payload injected into comment field</span>
+<span class="hl-val">&lt;script&gt;webgoat.customjs.phoneHome()&lt;/script&gt;</span>
+
+<span class="hl-comment"># Instead of storing as plain text, the application executed the script</span>
+<span class="hl-comment"># Browser network panel confirmed POST to /phone-home-xss:</span>
+<span class="hl-success">phoneHome Response is 994930725 — lessonCompleted: true</span></pre>
+  </div>
+
+  <div class="finding high">
+    <div class="finding-title">Stored XSS — Confirmed Execution · High</div>
+    <p>JavaScript payload executed successfully in the browser via a stored XSS vulnerability. In a real attack, the <code>phoneHome()</code> function would be replaced with a cookie-stealing script that exfiltrates session tokens to an attacker-controlled server — effectively hijacking authenticated sessions without any victim interaction beyond loading the page.</p>
+  </div>
+
+  <div class="step-header" style="margin-top:1.5rem;">
+    <span class="step-num">2.4</span>
+    <span class="step-title">CSRF — Identified via Automated Scan</span>
+  </div>
+
+  <p class="prose">CSRF was identified by OWASP ZAP, which flagged 5 instances of "Absence of Anti-CSRF Tokens" at medium severity. HTML forms — including the WebGoat login form — submitted POST requests with no token to verify the request originated from a legitimate user action.</p>
+
+  <div class="callout warn"><strong>How CSRF Works</strong>An attacker embeds a hidden form on a malicious website that automatically submits a request to a trusted application the victim is logged into. Because the browser automatically includes session cookies with every request, the server cannot distinguish the forged request from a legitimate one. No user interaction beyond visiting the malicious page is required.</div>
+
+  <hr>
+
+  <!-- CONCLUSION -->
+  <div class="step-header">
+    <span class="step-num">SUMMARY</span>
+    <span class="step-title">Key Takeaways</span>
+  </div>
+
+  <div class="callout note"><strong>Real vulnerabilities exist in everyday environments</strong>The unencrypted router admin interface was not a simulated lab finding — it was a genuine vulnerability discovered on a live home network using Wireshark. Security weaknesses are not hypothetical.</div>
+
+  <div class="callout note"><strong>Automated scanning is a starting point, not an endpoint</strong>OWASP ZAP identified SQL injection but could not exploit it. Manual analysis was required to discover that the vulnerable input was the registration form, not the login form — something only an attacker who reads application responses carefully would find.</div>
+
+  <div class="callout note"><strong>Blind injection requires patience and methodology</strong>When applications suppress error messages to prevent information leakage, blind techniques extract data by observing behavioural differences in responses — a slower but equally effective approach that highlights why thorough testing of all input fields matters.</div>
+
+</div>
+
+<div class="page-footer">
+  <a href="index.html#writeups" class="footer-link back">All Write-ups</a>
+  <span class="footer-note">Redynox Cybersecurity Internship · 2026</span>
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'copied!';
+      setTimeout(() => btn.textContent = 'copy', 2000);
+    });
+  }
+</script>
+</body>
+</html>
